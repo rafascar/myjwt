@@ -39,7 +39,11 @@ def print_payload(payload):
 
         click.secho(line)
 
+
+def print_token(token):
+    """Prints token."""
     click.secho()  # Extra space.
+    click.secho(token)
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -63,7 +67,7 @@ def cli(ctx, key):
 @click.option("--sub", default="sys", show_default=True, help='"sub" (Subject) Claim.')
 @click.option("--aud", help='"aud" (Audience) Claim.')
 @click.option(
-    "--ttl", default=86_400, show_default=True, help="Seconds until key expiration."
+    "--ttl", default=86400, show_default=True, help="Seconds until expiration."
 )
 @click.option("--extra", type=JSON, help="Extra payload claims.")
 @click.option("--copy", is_flag=True, help="Copy JWT to clipboard.")
@@ -94,8 +98,8 @@ def encode(obj, iss, sub, aud, ttl, extra, copy):
         pyperclip.copy(token)
 
     # Print result to screen.
+    print_token(token)
     print_payload(payload)
-    click.secho(token)
 
 
 @cli.command()
@@ -108,11 +112,14 @@ def decode(obj, token):
     """
     public_key = obj["key"]
     if public_key:
-        pass
-    else:
-        payload = jwt.decode(token, verify=False)
+        try:
+            jwt.decode(token, key=public_key, algorithm="RS256")
+            click.secho("\nSignature verified!", fg="green")
+        except jwt.exceptions.InvalidSignatureError:
+            click.secho("\nSignature verification failed.", fg="red")
 
     # Print token payload.
+    payload = jwt.decode(token, verify=False)
     print_payload(payload)
 
 
