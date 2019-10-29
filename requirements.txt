@@ -1,8 +1,6 @@
 cffi==1.13.1
 Click==7.0
 cryptography==2.8
-# Editable install with no version control (myjwt==0.1)
--e /Users/rafascar/workspace/3p/myjwt
 pycparser==2.19
 PyJWT==1.7.1
 pyperclip==1.7.0
