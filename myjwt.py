@@ -79,7 +79,7 @@ def encode(obj, iss, sub, aud, ttl, extra, copy):
         raise click.UsageError('Option "--key" is required for encoding.')
 
     # Build payload with required claims.
-    iat = datetime.utcnow().timestamp()
+    iat = datetime.now().timestamp()
     payload = {"iss": iss, "sub": sub, "iat": int(iat), "exp": int(iat + ttl)}
 
     # Add "aud" claim if supplied.
