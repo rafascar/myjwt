@@ -54,7 +54,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 @click.pass_context
 def cli(ctx, key):
     """Encode and decode JSON Web Tokens.
-    
+
     The crypto algorithm used is RS256 (RSA Signature with SHA-256);
     it uses a public/private key pair to validate/generate the signature.
     """
@@ -71,8 +71,9 @@ def cli(ctx, key):
 )
 @click.option("--extra", type=JSON, help="Extra payload claims.")
 @click.option("--copy", is_flag=True, help="Copy JWT to clipboard.")
+@click.option("-q", "--quiet", is_flag=True, help="Print only the token.")
 @click.pass_obj
-def encode(obj, iss, sub, aud, ttl, extra, copy):
+def encode(obj, iss, sub, aud, ttl, extra, copy, quiet):
     """Encode a JWT."""
     private_key = obj["key"]
     if not private_key:
@@ -98,8 +99,11 @@ def encode(obj, iss, sub, aud, ttl, extra, copy):
         pyperclip.copy(token)
 
     # Print result to screen.
-    print_token(token)
-    print_payload(payload)
+    if quiet:
+        click.secho(token)
+    if not quiet:
+        print_token(token)
+        print_payload(payload)
 
 
 @cli.command()
