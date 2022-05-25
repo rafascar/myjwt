@@ -2,6 +2,6 @@ cffi==1.13.1
 Click==7.0
 cryptography==3.2
 pycparser==2.19
-PyJWT==1.7.1
+PyJWT==2.4.0
 pyperclip==1.7.0
 six==1.12.0
